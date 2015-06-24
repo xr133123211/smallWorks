@@ -6,6 +6,7 @@ import java.util.concurrent.BlockingQueue;
 import edu.nju.controller.msgqueue.operation.MineOperation;
 import edu.nju.model.service.ChessBoardModelService;
 import edu.nju.model.service.GameModelService;
+import edu.nju.model.service.StatisticModelService;
 
 /**
  * 操作队列，所有的操作需要加入队列，该队列自行按操作到达的先后顺序处理操作。
@@ -22,14 +23,21 @@ public class OperationQueue implements Runnable{
 	
 	private static ChessBoardModelService chessBoard;
 	private static GameModelService gameModel;
+	private static StatisticModelService statisticModel;
 	
-	public OperationQueue(ChessBoardModelService chess, GameModelService game){
+	public OperationQueue(ChessBoardModelService chess, GameModelService game,StatisticModelService statistic){
 		queue = new ArrayBlockingQueue<MineOperation>(1000);
 		isRunning = true;
 		
 		chessBoard = chess;
 		gameModel = game;
+		statisticModel = statistic;
 		
+	}
+	
+	
+	public static StatisticModelService getStatistic(){
+		return statisticModel;
 	}
 
 	@Override

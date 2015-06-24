@@ -6,5 +6,11 @@ public interface MenuControllerService {
 	 * @return
 	 */
 	public boolean startGame();
+	
+	/**
+	 * 查看记录
+	 * @return
+	 */
+	public int[] getRecord();
 
 }

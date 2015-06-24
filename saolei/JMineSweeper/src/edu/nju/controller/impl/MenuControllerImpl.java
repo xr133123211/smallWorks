@@ -13,4 +13,13 @@ public class MenuControllerImpl implements MenuControllerService{
 		return true;
 	}
 
+	@Override
+	public int[] getRecord() {
+		// TODO Auto-generated method stub
+		String[] level = {"小","中","大",null};
+		int result[] = new int[4];
+		for (int i=0;i<4;i++)  result[i] = OperationQueue.getStatistic().showStatistics(level[i]);		
+		return result;
+	}
+
 }

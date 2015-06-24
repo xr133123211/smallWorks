@@ -17,6 +17,8 @@ public class ClientControllerImpl implements ClientControllerService{
 		clientH.addObserver(gameProxy);
 		
 		client.init("127.0.0.1", clientH);
+		
+
 		return true;
 	}
 

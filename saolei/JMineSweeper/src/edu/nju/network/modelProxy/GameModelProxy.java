@@ -4,6 +4,7 @@ package edu.nju.network.modelProxy;
 import java.util.List;
 
 import edu.nju.controller.msgqueue.operation.MineOperation;
+import edu.nju.controller.msgqueue.operation.SetLevelOperation;
 import edu.nju.controller.msgqueue.operation.StartGameOperation;
 import edu.nju.model.impl.GameLevel;
 import edu.nju.model.service.GameModelService;
@@ -24,7 +25,10 @@ public class GameModelProxy extends ModelProxy implements GameModelService{
 	@Override
 	public boolean setGameLevel(String level) {
 		// TODO Auto-generated method stub
-		return false;
+		if(level==null) return false;
+		MineOperation op = new SetLevelOperation(level);
+		net.submitOperation(op);
+		return true;
 	}
 
 	@Override
@@ -38,6 +42,7 @@ public class GameModelProxy extends ModelProxy implements GameModelService{
 	@Override
 	public boolean gameOver(GameResultState result) {
 		// TODO Auto-generated method stub
+		
 		return false;
 	}
 

@@ -12,7 +12,7 @@ public interface StatisticModelService {
 	/**
 	 * 在界面上显示统计结果
 	 */
-	public void showStatistics();
+	public int showStatistics(String level);
 	
 	/**
 	 * 记录游戏结果，并在界面上显示统计结果
@@ -20,6 +20,7 @@ public interface StatisticModelService {
 	 * @param level 游戏时间
 	 */
 	public void recordStatistic(GameResultState result,int time);
+	
 
 
 }

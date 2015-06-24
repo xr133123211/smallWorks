@@ -16,8 +16,7 @@ public class StatisticModelImpl extends BaseModel implements StatisticModelServi
 	
 	public StatisticModelImpl(String level){
 		//初始化Dao
-		if (level==null) this.level = "自定义";
-		else this.level = level;
+		this.level = level;
 		statisticDao = new StatisticData();
 	}
 
@@ -38,9 +37,10 @@ public class StatisticModelImpl extends BaseModel implements StatisticModelServi
 	}
 
 	@Override
-	public void showStatistics() {
+	public int showStatistics(String level) {
 		// TODO Auto-generated method stub
-		System.out.println(statisticDao.getStatistic(level).getSum());
+		return (int)(statisticDao.getStatistic(level).getWinrate()*100);
+		//System.out.println(statisticDao.getStatistic(level).getSum());
 	}
 
 }

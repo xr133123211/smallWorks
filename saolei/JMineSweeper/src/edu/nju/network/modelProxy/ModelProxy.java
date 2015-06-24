@@ -29,6 +29,7 @@ public class ModelProxy extends BaseModel implements Observer{
 			if(super_class.isAssignableFrom(Class.forName(trigger_class))){
 				System.out.println(this.getClass().getName()+" get the UpdateMessage!");
 				this.updateChange(msg);
+				//System.out.println(msg.getKey());
 				System.out.println("UpdateMessage send!!!");
 			}
 		} catch (ClassNotFoundException e) {

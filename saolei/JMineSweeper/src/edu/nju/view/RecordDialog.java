@@ -28,7 +28,8 @@ public class RecordDialog {
 
 	public boolean show(String[] names, int[] score) {
 		clear = false;
-		this.names = names;
+		if (names==null)this.names = new String[]{"Player","Player","Player","Player"};
+		else this.names = names;
 		this.score = score;
 		dialog.setVisible(true);
 		return clear;
@@ -36,8 +37,8 @@ public class RecordDialog {
 	
 	public void show(){
 		//dialog.setVisible(true);
-		this.names = new String[]{"UnKnown","UnKnown","UnKnown"};
-		this.score = new int[]{999,999,999};
+		this.names = new String[]{"Player","Player","Player","Player"};
+		this.score = new int[]{999,999,999,999};
 		show(names,score);
 	}
 
@@ -110,7 +111,7 @@ public class RecordDialog {
 		}
 	}
 
-	private final String[] rank = { "Easy", "Hard", "Hell" };
+	private final String[] rank = { "Easy", "Hard", "Hell","Custom"};
   	private JDialog dialog;
 
 	private JPanel panel;

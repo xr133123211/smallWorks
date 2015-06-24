@@ -29,7 +29,7 @@ public class JMineSweeper {
  		mineNumberModel.addObserver(ui.getMineNumberLabel());
  		mineBoardModel.addObserver(ui.getMineBoard());
  		
- 		OperationQueue operationQueue = new OperationQueue(mineBoardModel, gameModel);
+ 		OperationQueue operationQueue = new OperationQueue(mineBoardModel, gameModel,statisticModel);
  		Thread operationThread = new Thread(operationQueue);
  		operationThread.start();
  	    try {

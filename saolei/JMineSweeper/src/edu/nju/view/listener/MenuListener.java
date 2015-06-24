@@ -55,7 +55,8 @@ public class MenuListener implements ActionListener{
 			System.exit(0);
 		} else if (e.getSource() == ui.getMenuItem("record")) {//统计胜率信息
 			RecordDialog record = new RecordDialog(ui.getMainFrame());
-			record.show();
+			record.show(null,menuController.getRecord() );
+			//record.show();
 		}else if(e.getSource() == ui.getMenuItem("host")){//注册成为主机
 			hostController.serviceetupHost();
 		}else if(e.getSource() == ui.getMenuItem("client")){//注册成为客户端
