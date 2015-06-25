@@ -56,8 +56,9 @@ public class GameModelProxy extends ModelProxy implements GameModelService{
 
 	@Override
 	public boolean setGameSize(int width, int height, int mineNum) {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
+	
 
 }

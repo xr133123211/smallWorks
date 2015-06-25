@@ -28,7 +28,7 @@ public interface ChessBoardModelService {
 	 * @param y
 	 * @return 操作是否可执行
 	 */
-	public boolean excavate(int x, int y);
+	public boolean excavate(int x, int y,int player);
 	
 	/**
 	 * 标记(x,y)位置
@@ -54,7 +54,7 @@ public interface ChessBoardModelService {
 	 * @param y
 	 * @return 操作是否可执行
 	 */
-	public boolean quickExcavate(int x, int y);
+	public boolean quickExcavate(int x, int y,int player);
 	
 	/**
 	 * 传入GameModelService引用，初始化时使用

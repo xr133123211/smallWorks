@@ -25,11 +25,12 @@ import javax.swing.JSeparator;
 import javax.swing.UIManager;
 
 import edu.nju.model.impl.UpdateMessage;
+import edu.nju.model.state.GameResultState;
 import edu.nju.model.vo.GameVO;
 import edu.nju.view.listener.CoreListener;
 import edu.nju.view.listener.MenuListener;
 
-public class MainFrame implements Observer {
+public class NetMainFrame implements Observer {
 	
 	//Variables declaration
 	private JFrame mainFrame; 
@@ -51,9 +52,9 @@ public class MainFrame implements Observer {
 	private JMenu online;
 	private JMenuItem host;
 	private JMenuItem client;
-	private MineNumberLabel mineNumberLabel;
+	private MineNumberLabel mineNumberLabel,mineNumberLabel2;
 	private JButton startButton;
-	private JLabel time;
+	//private JLabel time;
 	private MineBoardPanel body;
 	private final int buttonSize = 16;
 	private final int bodyMarginNorth = 20;
@@ -62,9 +63,10 @@ public class MainFrame implements Observer {
 	private int defaultHeight = 9;
 	private CoreListener coreListener;
 	private MenuListener menuListener;
+	protected TimeLabel time;
 	//End of variables declaration
 
-	public MainFrame() {
+	public NetMainFrame() {
 		try {
 			UIManager
 					.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -76,14 +78,21 @@ public class MainFrame implements Observer {
 		mainFrame.setVisible(true);
 
 	}
+	
+	public void removeTime(){
+		time.setVisible(false);		
+		mineNumberLabel2.setVisible(true);
+	}
 
 	//Instantiation of components
 	private void componentsInstantiation() {
 		mainFrame = new JFrame();
 		head = new JPanel();
 		mineNumberLabel = new MineNumberLabel();
+		mineNumberLabel2 = new MineNumberLabel();
+		mineNumberLabel2.setVisible(false);
 		startButton = new JButton();
-		time = new JLabel();
+		time = new TimeLabel();
 
 		aJMenuBar = new JMenuBar();
 		game = new JMenu();
@@ -194,15 +203,19 @@ public class MainFrame implements Observer {
         startButton.addActionListener(coreListener);
 		Font font = new Font("Serif", Font.BOLD, 12);
 		mineNumberLabel.setFont(font);
+		mineNumberLabel2.setFont(font);
 		time.setFont(font);
 
 		mineNumberLabel.setHorizontalAlignment(JLabel.CENTER);
+		mineNumberLabel2.setHorizontalAlignment(JLabel.CENTER);
         time.setHorizontalAlignment(JLabel.CENTER);
 		
         mineNumberLabel.setText("剩余雷数");
+        mineNumberLabel2.setText("Client");
 		time.setText("0");
 
 		head.add(mineNumberLabel);
+		head.add(mineNumberLabel2);
 		head.add(startButton);
 		head.add(time);
 		mainFrame.getContentPane().add(head);	
@@ -222,6 +235,7 @@ public class MainFrame implements Observer {
 		startButton.setBounds((head.getWidth() - 50) / 2,
 				(head.getHeight() - 50) / 2, 50, 50);
 		mineNumberLabel.setBounds(0, 0, head.getHeight(), head.getHeight());
+		mineNumberLabel2.setBounds(100, 0, head.getHeight(), head.getHeight());
 		time.setBounds(head.getWidth() - head.getHeight(), 0, head.getHeight(),
 				head.getHeight());
 
@@ -248,6 +262,7 @@ public class MainFrame implements Observer {
 				
 			}
 		});
+		new Thread(time).start();
 	}
 
 	public JFrame getMainFrame() {
@@ -266,7 +281,9 @@ public class MainFrame implements Observer {
 	public MineNumberLabel getMineNumberLabel(){
 		return this.mineNumberLabel;
 	}
-
+	public MineNumberLabel getMineNumberLabel2(){
+		return this.mineNumberLabel2;
+	}
 	public JButton getStartButton(){
 		return this.startButton;
 	}
@@ -287,11 +304,40 @@ public class MainFrame implements Observer {
 			restart(gameHeight,gameWidth,level);
 			startButton.setIcon(Images.START_RUN);
 		}else if(notifingObject.getKey().equals("end")){
-			startButton.setIcon(Images.START_END);
-			body.setBorder(new javax.swing.border.TitledBorder(
-					new javax.swing.border.TitledBorder(""), "game end",
-					javax.swing.border.TitledBorder.CENTER,
-					javax.swing.border.TitledBorder.DEFAULT_POSITION));
+			GameVO end = (GameVO) notifingObject.getValue();
+			GameResultState result = end.getGameResultStae(); 
+			if(result==GameResultState.FAIL){
+				startButton.setIcon(Images.START_END);
+				
+				body.setBorder(new javax.swing.border.TitledBorder(
+						new javax.swing.border.TitledBorder(""), "game end",
+						javax.swing.border.TitledBorder.CENTER,
+						javax.swing.border.TitledBorder.DEFAULT_POSITION));	
+			}
+			else if(result==GameResultState.FAIL2){
+				startButton.setIcon(Images.START_END);
+				
+				body.setBorder(new javax.swing.border.TitledBorder(
+						new javax.swing.border.TitledBorder(""), "Player2 lose!",
+						javax.swing.border.TitledBorder.CENTER,
+						javax.swing.border.TitledBorder.DEFAULT_POSITION));	
+			}
+			else if(result==GameResultState.SUCCESS){
+				startButton.setIcon(Images.START_BEGIN);
+				
+				body.setBorder(new javax.swing.border.TitledBorder(
+						new javax.swing.border.TitledBorder(""), "Player1 Win",
+						javax.swing.border.TitledBorder.CENTER,
+						javax.swing.border.TitledBorder.DEFAULT_POSITION));
+			}
+			else if(result==GameResultState.Sucess2){
+				startButton.setIcon(Images.START_BEGIN);
+				
+				body.setBorder(new javax.swing.border.TitledBorder(
+						new javax.swing.border.TitledBorder(""), "Player2 Win",
+						javax.swing.border.TitledBorder.CENTER,
+						javax.swing.border.TitledBorder.DEFAULT_POSITION));
+			}
 		}
 	}
 
@@ -303,6 +349,7 @@ public class MainFrame implements Observer {
 		startButton.setBounds((head.getWidth() - 50) / 2,
 				(head.getHeight() - 50) / 2, 50, 50);
 		mineNumberLabel.setBounds(0, 0, head.getHeight(), head.getHeight());
+		mineNumberLabel2.setBounds(100, 0, head.getHeight(), head.getHeight());
 		time.setBounds(head.getWidth() - head.getHeight(), 0, head.getHeight(),
 				head.getHeight());
 
@@ -316,6 +363,7 @@ public class MainFrame implements Observer {
 		mainFrame.getContentPane().add(body);
 		mainFrame.setSize(body.getWidth() + 10, body.getHeight()
 				+ head.getHeight() + 60);
+		time.restart();
 		time.setText("0");
 		
 		if(type == null){

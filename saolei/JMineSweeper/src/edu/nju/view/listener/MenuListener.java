@@ -16,20 +16,20 @@ import edu.nju.controller.service.HostControllerService;
 import edu.nju.controller.service.MenuControllerService;
 import edu.nju.controller.service.SettingControllerService;
 import edu.nju.view.CustomDialog;
-import edu.nju.view.MainFrame;
+import edu.nju.view.NetMainFrame;
 import edu.nju.view.RecordDialog;
  
 
 public class MenuListener implements ActionListener{
 
-	private MainFrame ui;
+	private NetMainFrame ui;
 	MenuControllerService menuController = new MenuControllerImpl();
 	SettingControllerService settingController = new SettingControllerImpl();
 	HostControllerService hostController = new HostControllerImpl();
 	ClientControllerService clientController = new ClientControllerImpl();
 	
-	public MenuListener(MainFrame ui){
-		this.ui = ui;
+	public MenuListener(NetMainFrame netMainFrame){
+		this.ui = netMainFrame;
 	}
 	/*
 	 * (non-Javadoc)

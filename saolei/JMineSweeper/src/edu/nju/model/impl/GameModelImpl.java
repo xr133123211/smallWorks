@@ -10,6 +10,7 @@ import edu.nju.model.service.StatisticModelService;
 import edu.nju.model.state.GameResultState;
 import edu.nju.model.state.GameState;
 import edu.nju.model.vo.GameVO;
+import edu.nju.view.NetMainFrame;
 
 public class GameModelImpl extends BaseModel implements GameModelService{
 	
@@ -23,6 +24,7 @@ public class GameModelImpl extends BaseModel implements GameModelService{
 	private int height;
 	private int mineNum;
 	private String level;
+	private NetMainFrame ui;
 	
 	private GameResultState gameResultStae;
 	private int time;
@@ -120,5 +122,12 @@ public class GameModelImpl extends BaseModel implements GameModelService{
 	public List<GameLevel> getGameLevel() {
 		// TODO Auto-generated method stub
 		return this.levelList;
+	}
+	
+	public NetMainFrame getUI(){
+		return ui;
+	}
+	public void setUI(NetMainFrame ui){
+		this.ui = ui;
 	}
 }

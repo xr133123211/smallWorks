@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.nju.model.po.BlockPO;
 import edu.nju.model.service.ChessBoardModelService;
+import edu.nju.model.service.ClientParameterModelService;
 import edu.nju.model.service.GameModelService;
 import edu.nju.model.service.ParameterModelService;
 import edu.nju.model.state.BlockState;
@@ -16,13 +17,25 @@ public class ChessBoardModelImpl extends BaseModel implements ChessBoardModelSer
 	
 	private GameModelService gameModel;
 	private ParameterModelService parameterModel;
+	private ClientParameterModelService parameterModel2;
 	
 	private BlockPO[][] blockMatrix;
 	private int mineNum;
 
 	
+	public ParameterModelService getParameterModelService(){
+		return parameterModel;
+	}
+	public ClientParameterModelService getParameterModelService2(){
+		return parameterModel2;
+	}
+	
 	public ChessBoardModelImpl(ParameterModelService parameterModel){
 		this.parameterModel = parameterModel;
+	}
+	public ChessBoardModelImpl(ParameterModelService parameterModel,ClientParameterModelService parameterModel2){
+		this.parameterModel = parameterModel;
+		this.parameterModel2 = parameterModel2;
 	}
 
 	@Override
@@ -30,6 +43,7 @@ public class ChessBoardModelImpl extends BaseModel implements ChessBoardModelSer
 		blockMatrix = new BlockPO[width][height];
 		setBlock(mineNum);		
 		this.parameterModel.setMineNum(mineNum);
+		if(this.parameterModel2!=null) this.parameterModel2.setMineNum(mineNum);
 		this.mineNum = mineNum;
 		//this.printBlockMatrix();
 		
@@ -37,7 +51,7 @@ public class ChessBoardModelImpl extends BaseModel implements ChessBoardModelSer
 	}
 
 	@Override
-	public boolean excavate(int x, int y) {
+	public boolean excavate(int x, int y,int player) {
 		/********************简单示例挖开方法，待完善********************/
 		if(blockMatrix == null)
 			return false;		
@@ -48,6 +62,8 @@ public class ChessBoardModelImpl extends BaseModel implements ChessBoardModelSer
 		BlockState state = block.getState();
 		if(state == BlockState.FLAG){
 			this.parameterModel.addMineNum();
+		}else if(state == BlockState.FLAGClient){
+			this.parameterModel2.addMineNum();
 		}		
 		block.setState(BlockState.CLICK);
 		blocks.add(block);
@@ -57,7 +73,9 @@ public class ChessBoardModelImpl extends BaseModel implements ChessBoardModelSer
 
 		if(block.isMine()){
 			gameState = GameState.OVER;
+			if(player==0)
 			this.gameModel.gameOver(GameResultState.FAIL);
+			else this.gameModel.gameOver(GameResultState.FAIL2);
 		}
 				
 		
@@ -72,24 +90,70 @@ public class ChessBoardModelImpl extends BaseModel implements ChessBoardModelSer
 		List<BlockPO> blocks = new ArrayList<BlockPO>();
 		
 		BlockPO block = blockMatrix[x][y];
+		
 		 
 		BlockState state = block.getState();
+		
+		
 		if(state == BlockState.UNCLICK){
+			boolean r = this.parameterModel.minusMineNum();
+			if(!r) return false;
 			block.setState(BlockState.FLAG);
-			this.parameterModel.minusMineNum();
+
 		}
 		else if(state == BlockState.FLAG){
+			boolean r =this.parameterModel.addMineNum(); 
+			if(!r) return false;
 			block.setState(BlockState.UNCLICK);
-			this.parameterModel.addMineNum();
+			
+
 		}		
 		
 		
 		blocks.add(block);
 		GameState gameState = GameState.RUN;
+		
+
+		if(block.isMine()){
+			gameState = GameState.OVER;			
+			this.gameModel.gameOver(GameResultState.FAIL);
+		}
 		if (checkEnd()) {
 			gameState = GameState.OVER;
-			this.gameModel.gameOver(GameResultState.SUCCESS);
+			//this.gameModel.gameOver(GameResultState.SUCCESS);
 		}
+		super.updateChange(new UpdateMessage("excute",this.getDisplayList(blocks, gameState)));		
+		return true;
+	}
+	
+	public boolean markClient(int x, int y) {
+		if(blockMatrix == null)
+			return false;
+		List<BlockPO> blocks = new ArrayList<BlockPO>();
+		
+		BlockPO block = blockMatrix[x][y];
+		 
+		BlockState state = block.getState();
+		if(state == BlockState.UNCLICK){
+			boolean r = this.parameterModel2.minusMineNum();
+			if(!r) return false;
+			block.setState(BlockState.FLAGClient);
+			
+		}
+		else if(state == BlockState.FLAGClient){
+			boolean r =this.parameterModel2.addMineNum(); 
+			if(!r) return false;
+			block.setState(BlockState.UNCLICK);			
+		}		
+		
+
+		blocks.add(block);
+		GameState gameState = GameState.RUN;
+		if(block.isMine()){
+			gameState = GameState.OVER;			
+			this.gameModel.gameOver(GameResultState.FAIL2);
+		}
+		if (checkEnd()) gameState = GameState.OVER;
 		super.updateChange(new UpdateMessage("excute",this.getDisplayList(blocks, gameState)));		
 		return true;
 	}
@@ -99,23 +163,29 @@ public class ChessBoardModelImpl extends BaseModel implements ChessBoardModelSer
 		int height = blockMatrix[0].length;
 		
 		int index = 0;
+		int index2 = 0;
 		
 		for(int i = 0 ; i<width; i++){
 			for (int j = 0 ; j< height; j++){
 				
 				if(blockMatrix[i][j].isMine()&&BlockState.FLAG==blockMatrix[i][j].getState()) index++;
+				if(blockMatrix[i][j].isMine()&&BlockState.FLAGClient==blockMatrix[i][j].getState()) index2++;
 				
 			}
 		}
 		
 		System.out.println(index+" index");
-		if(index==this.mineNum) return true;
+		if(index+index2==this.mineNum) {
+			if (index<index2) this.gameModel.gameOver(GameResultState.Sucess2);
+			else this.gameModel.gameOver(GameResultState.SUCCESS);
+			return true;
+		}
 		
 		return false;
 	}
 	
 	@Override
-	public boolean quickExcavate(int x, int y) {
+	public boolean quickExcavate(int x, int y,int player) {
 		if(blockMatrix == null)
 			return false;
 		
@@ -129,7 +199,8 @@ public class ChessBoardModelImpl extends BaseModel implements ChessBoardModelSer
 				int tempJ = y-1;
 				for(;tempJ<=y+1;tempJ++){
 					if((tempI>-1&&tempI<width)&&(tempJ>-1&&tempJ<height)){					
-						if(BlockState.FLAG==blockMatrix[tempI][tempJ].getState()) flag++;
+						if(BlockState.FLAG==blockMatrix[tempI][tempJ].getState()||BlockState.FLAGClient==blockMatrix[tempI][tempJ].getState())
+							flag++;
 					}
 				}
 			}
@@ -139,7 +210,7 @@ public class ChessBoardModelImpl extends BaseModel implements ChessBoardModelSer
 				int tempJ = y-1;
 				for(;tempJ<=y+1;tempJ++){
 					if((tempI>-1&&tempI<width)&&(tempJ>-1&&tempJ<height)){					
-						if(BlockState.FLAG!=blockMatrix[tempI][tempJ].getState())excavate(tempI,tempJ);
+						if(BlockState.FLAG!=blockMatrix[tempI][tempJ].getState())excavate(tempI,tempJ,player);
 					}
 				}
 			}

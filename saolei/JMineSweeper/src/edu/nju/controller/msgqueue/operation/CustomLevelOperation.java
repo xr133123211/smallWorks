@@ -5,6 +5,10 @@ import edu.nju.model.service.GameModelService;
 
 public class CustomLevelOperation extends MineOperation{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	int height,width,mineNum;
 	
 	public CustomLevelOperation(int w,int h,int m){

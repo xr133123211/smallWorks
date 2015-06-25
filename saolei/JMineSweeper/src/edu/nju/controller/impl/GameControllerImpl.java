@@ -10,7 +10,7 @@ public class GameControllerImpl implements GameControllerService{
 	@Override
 	public boolean handleLeftClick(int x, int y) {
 		// TODO Auto-generated method stub
-		MineOperation op = new LeftClickOperation(x,y);
+		MineOperation op = new LeftClickOperation(x,y,0);
 		OperationQueue.addMineOperation(op);
 		return true;
 	}
@@ -26,7 +26,7 @@ public class GameControllerImpl implements GameControllerService{
 	@Override
 	public boolean handleDoubleClick(int x, int y) {
 		// TODO Auto-generated method stub
-		MineOperation op = new DoubleClickOperation(x,y);
+		MineOperation op = new DoubleClickOperation(x,y,0);
 		OperationQueue.addMineOperation(op);
 		return false;
 	}

@@ -10,21 +10,21 @@ import edu.nju.controller.impl.MenuControllerImpl;
 import edu.nju.controller.service.GameControllerService;
 import edu.nju.controller.service.MenuControllerService;
 import edu.nju.view.Location;
-import edu.nju.view.MainFrame;
 import edu.nju.view.MyButton;
+import edu.nju.view.NetMainFrame;
 
 public class CoreListener implements MouseListener, ActionListener {
 	
 	
 
-	private MainFrame ui;
+	private NetMainFrame ui;
 	MenuControllerService menuController = new MenuControllerImpl();
 	GameControllerService mouseController = new GameControllerImpl();
 
 
-	public CoreListener(MainFrame ui){
+	public CoreListener(NetMainFrame netMainFrame){
 		super();
-  		this.ui = ui;
+  		this.ui = netMainFrame;
 	}
 	public CoreListener(){
 	}

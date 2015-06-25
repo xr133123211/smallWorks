@@ -5,6 +5,10 @@ import edu.nju.model.service.GameModelService;
 
 public class SetLevelOperation extends MineOperation{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String level;
 	
 	public SetLevelOperation(String s){

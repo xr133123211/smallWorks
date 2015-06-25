@@ -83,6 +83,8 @@ public class Images {
 			return number[7];
 		case FLAG:
 			return MARKED_MINE;
+		case CLIENT:
+			return MARKED;
 		case MINE:
 			return MINE;
 		case Bomb:
